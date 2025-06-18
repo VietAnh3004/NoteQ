@@ -14,6 +14,7 @@ import { AuthenDTO } from './dtos/auth.dto';
 import { env } from 'src/config';
 import { RefreshJwtAuthGuard } from 'src/guards/refresh.guard';
 import { JwtAuthGuard } from 'src/guards/jwt.guard';
+import {ApiBody, ApiOperation} from "@nestjs/swagger";
 
 const REFRESH_COOKIE_OPTIONS = {
   httpOnly: true,
@@ -26,12 +27,22 @@ const REFRESH_COOKIE_OPTIONS = {
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiOperation({description: "Register a new user", summary: "Register a new user"})
+  @ApiBody({
+    description: "User's credentials for registration",
+    type: AuthenDTO,
+  })
   @Post('/register')
   async register(@Body() { username, password }: AuthenDTO) {
     await this.userService.register({ username, password });
     return { message: 'Register successful' };
   }
 
+  @ApiOperation({description: "Login a user", summary: "Login a user"})
+  @ApiBody({
+    description: "User's credentials for login",
+    type: AuthenDTO,
+  })
   @Post('/login')
   async login(
     @Body() { username, password }: AuthenDTO,
@@ -47,6 +58,7 @@ export class UserController {
     return { message: 'Login succesful', accessToken: tokens.accessToken };
   }
 
+  @ApiOperation({description: "Logout a user", summary: "Logout a user"})
   @Post('/logout')
   @UseGuards(RefreshJwtAuthGuard)
   async logout(@Request() req: any, @Res({ passthrough: true }) res: any) {
@@ -56,6 +68,20 @@ export class UserController {
     return { message: 'Logout successful' };
   }
 
+  @ApiOperation({description: "Bind email to user account", summary: "Bind email"}) 
+  @ApiBody({
+    description: "User's email to bind",
+    schema: {
+        type: 'object',
+        properties: {
+          email: {
+            type: 'string',
+            format: 'email',
+            example: 'example@gmail.com',
+          }
+        }
+    }
+  })
   @Post('/bind-email')
   @UseGuards(JwtAuthGuard)
   async bindEmail(@Request() req: any) {
@@ -63,6 +89,7 @@ export class UserController {
     return { message: 'Bind email successful' };
   }
 
+  @ApiOperation({description: "Refresh user token", summary: "Refresh user token"})
   @Get('/refresh')
   @UseGuards(RefreshJwtAuthGuard)
   async refreshToken(@Req() req: any, @Res({ passthrough: true }) res) {

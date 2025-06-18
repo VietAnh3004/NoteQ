@@ -13,7 +13,7 @@ import {
 import { NoteService } from './note.service';
 import { Note } from './entities/note.entity';
 import { JwtAuthGuard } from 'src/guards/jwt.guard';
-import { ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery} from '@nestjs/swagger';
 import { CreateNoteDTO } from './dtos/note.dto';
 
 @Controller('notes')
@@ -22,6 +22,7 @@ import { CreateNoteDTO } from './dtos/note.dto';
 export class NoteController {
   constructor(private readonly noteService: NoteService) {}
 
+  @ApiOperation({summary: 'Get all notes', description: 'Fetches all notes with pagination and sorting options.'})
   @Get()
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'pageSize', required: false, type: Number })
@@ -43,11 +44,18 @@ export class NoteController {
     );
   }
 
+  @ApiOperation({summary: 'Get a note by ID', description: 'Fetches a specific note by its ID.'})
+  @ApiParam({name: 'note_id', required: true, type: Number})
   @Get(':note_id')
   async getNoteById(@Param('note_id') note_id: number) {
     return this.noteService.getNoteById(+note_id);
   }
 
+  @ApiOperation({summary: 'Create a new note', description: 'Creates a new note with the provided details.'})
+  @ApiBody({
+    description: 'Details of the note to be created',
+    type: CreateNoteDTO,
+  })
   @Post()
   async createNote(
     @Req() req: any,
@@ -63,6 +71,12 @@ export class NoteController {
     );
   }
 
+  @ApiOperation({summary: 'Update a note', description: 'Updates an existing note with the provided fields.'})
+  @ApiParam({ name: 'note_id', required: true, type: Number })
+  @ApiBody({
+    description: 'Fields to update in the note',
+    type: CreateNoteDTO,
+  })
   @Patch(':note_id')
   async updateNote(
     @Req() req: any,
@@ -76,6 +90,7 @@ export class NoteController {
     return this.noteService.updateNote(account_id, +note_id, fieldsToUpdate);
   }
 
+  @ApiOperation({summary: 'Delete a note', description: 'Deletes a note by its ID with an optional reason.'})
   @Delete(':note_id')
   @ApiParam({ name: 'note_id', required: true, type: Number })
   @ApiQuery({ name: 'reason', required: false, type: String })
