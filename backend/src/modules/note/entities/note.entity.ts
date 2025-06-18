@@ -17,7 +17,7 @@ export class Note {
   @Column()
   header: string;
 
-  @Column()
+  @Column({ type: 'text'})
   content: string;
 
   @Column()

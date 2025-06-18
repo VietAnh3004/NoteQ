@@ -7,17 +7,17 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build
+CMD ["npm", "run", "dev"]
 
 
-# ---- Serve Stage ----
-FROM node:24-alpine
+# # ---- Serve Stage ----
+# FROM node:24-alpine
 
-WORKDIR /app
+# WORKDIR /app
 
-RUN npm install -g serve
+# RUN npm install -g serve
 
-COPY --from=builder /app/dist ./dist
+# COPY --from=builder /app/dist ./dist
 
-EXPOSE 3000
-CMD ["serve", "-s", "dist", "-l", "3000"]
+# EXPOSE 3000
+# CMD ["serve", "-s", "dist", "-l", "3000"]

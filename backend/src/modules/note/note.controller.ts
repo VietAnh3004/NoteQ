@@ -100,7 +100,7 @@ export class NoteController {
     @Query('reason') reason?: string,
   ) {
     const account_id = req.user.account_id;
-    console.log(account_id);
+    
     const role = req.user.role;
     await this.noteService.deleteNote(account_id, +note_id, role, reason);
 

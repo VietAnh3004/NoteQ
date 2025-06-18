@@ -74,7 +74,7 @@ export class UserService {
 
       throw new ConflictException('Username or password does not matched');
     } catch (error) {
-      console.log(error);
+      
       if (
         error instanceof ConflictException ||
         error instanceof NotFoundException

@@ -1,21 +1,18 @@
-import { useState } from 'react'
+import React from 'react'
+import SignIn from './pages/SignIn'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from './pages/Home';
 
-function App() {
+const App = () => {
   return (
-    <button onClick={() => {
-        //
-        fetch(`http://localhost:8080/api/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: 'testuser',
-                password: 'testpassword'
-            })
-        }).then(res => res.json()).then(res => console.log(res))
-    }}>Duma</button>  
-  );
+     <Router>
+            <Routes>
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/" element={<Home/>} />
+                {/* Add more routes as needed */}
+            </Routes>
+        </Router>
+  )
 }
 
 export default App

@@ -38,8 +38,9 @@ export class NoteService {
       if (!notes) {
         throw new NotFoundException(`Note with ID ${note_id} not found`);
       }
-      return notes[0];
+      return notes;
     } catch (error) {
+      console.error(error);
       throw new InternalServerErrorException('Failed to fetch note');
     }
   }
