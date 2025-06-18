@@ -6,7 +6,7 @@ export const isLocal = process.env.NODE_ENV === 'local';
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['production', 'development', 'test', 'local', 'staging']),
-  PORT: z.coerce.number().default(3000),
+  PORT: z.coerce.number().default(8080),
 
   REFRESH_COOKIE_NAME: z.string(),
 
@@ -17,6 +17,8 @@ const envSchema = z.object({
   REFRESH_TIME: z.string(),
 
   MYSQL_URL: z.string(),
+  
+  FRONTEND_PORT: z.coerce.number().default(3000),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -52,4 +54,8 @@ export const env = {
   mysql: {
     url: envVars.MYSQL_URL,
   },
+  
+  ui: {
+    port: envVars.FRONTEND_PORT
+  }
 };

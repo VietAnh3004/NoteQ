@@ -16,7 +16,7 @@ const setMiddleware = (app: NestExpressApplication) => {
 
   app.enableCors({
     credentials: true,
-    origin: '*',
+    origin: `http://localhost:${env.ui.port}`,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin'],
     preflightContinue: false,

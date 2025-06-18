@@ -1,17 +1,4 @@
-version: '3.8'
-
-services:
-  backend:
-    build: .
-    ports:
-      - "${PORT}:${PORT}"
-    env_file:
-      - .env
-    depends_on:
-      - mysql
-    networks:
-      - backend-net
-
+﻿services:
   mysql:
     image: mysql:latest
     restart: always
@@ -25,9 +12,33 @@ services:
     networks:
       - backend-net
 
+  backend:
+    build: ./backend
+    ports:
+      - "${PORT}:${PORT}"
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    networks:
+      - backend-net
+        
+  frontend:
+    build: ./frontend
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    environment:
+      VITE_BACKEND_URL: "http://backend:${PORT}"
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+      - backend
+    networks:
+      - backend-net
+      
 volumes:
   mysql-data:
-
 
 networks:
   backend-net:
