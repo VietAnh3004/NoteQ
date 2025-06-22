@@ -11,7 +11,9 @@ export class AccountRepository {
   ) {}
 
   async findByUsername(username: string): Promise<Account | null> {
-    return this.repo.findOne({ where: { username } });
+    return this.repo.findOne({
+      where: { username },
+    });
   }
 
   async findByAccountID(account_id: number): Promise<Account | null> {
@@ -34,6 +36,28 @@ export class AccountRepository {
     });
 
     return this.save(account);
+  }
+
+  async getUser(page: number, pageSize: number, order: 'ASC' | 'DESC' = 'ASC') {
+    const [data, total] = await this.repo.findAndCount({
+      where: { role: 'user' },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      order: { updated_at: order },
+      select: {
+        account_id: true,
+        username: true,
+        role: true,
+      },
+    });
+
+    return {
+      data,
+      total,
+      page,
+      pageSize,
+      totalPages: Math.ceil(total / pageSize),
+    };
   }
 
   async save(account: Account): Promise<void> {

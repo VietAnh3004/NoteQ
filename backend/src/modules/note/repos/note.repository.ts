@@ -22,6 +22,19 @@ export class NoteRepository {
       skip: (page - 1) * pageSize,
       take: pageSize,
       order: { [type]: order },
+      relations: ['note', 'note.account'],
+      select: {
+        note_id: true,
+        content: true,
+        importance_rate: true,
+        created_at: true,
+        is_deleted: true,
+        delete_reason: true,
+        account: {
+          username: true,
+          role: true,
+        },
+      },
     });
 
     return {
