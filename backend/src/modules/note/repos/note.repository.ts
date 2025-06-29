@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Note } from '../entities/note.entity';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 
 @Injectable()
 export class NoteRepository {
@@ -22,9 +22,9 @@ export class NoteRepository {
       skip: (page - 1) * pageSize,
       take: pageSize,
       order: { [type]: order },
-      relations: ['note', 'note.account'],
       select: {
         note_id: true,
+        header: true,
         content: true,
         importance_rate: true,
         created_at: true,
@@ -84,9 +84,6 @@ export class NoteRepository {
   }
 
   async adminDeleteNote(note_id: number, reason: string = '') {
-    const note = await this.getNote(note_id);
-    note.is_deleted = true;
-    note.delete_reason = reason;
-    await this.repo.save(note);
+    await this.repo.delete(note_id);
   }
 }
