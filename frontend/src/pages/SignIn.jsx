@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import tokenManager from '../storage';
 import { useNavigate } from 'react-router-dom';
-
+import { jwtDecode } from "jwt-decode";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -47,7 +47,15 @@ function SignIn() {
         console.log('Token saved:', data.accessToken);
         setMessage('Đăng nhập thành công!');
         setIsLoggedIn(true);
-        navigate('/'); // Redirect to home or dashboard after login
+        // Điều hướng theo role
+        const decoded = jwtDecode(data.accessToken);
+        console.log('Decoded token:', decoded);
+        if (decoded.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+
         // Reset form
         setFormData({ username: '', password: '', confirmPassword: '' });
       } else {

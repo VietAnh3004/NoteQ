@@ -39,6 +39,18 @@ export class AdminService extends UserService {
     }
   }
 
+  async getUserList(
+    page: number,
+    pageSize: number,
+    order: 'ASC' | 'DESC' = 'ASC',
+  ) {
+    try {
+      return this.accountRepository.getUser(page, pageSize, order);
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to get user list');
+    }
+  }
+
   async deleteAccount(account_id: number) {
     try {
       await this.accountRepository.delete(account_id);
